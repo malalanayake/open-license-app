@@ -27,7 +27,7 @@ public class ContextConfig {
     public PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer() {
 	log.info("[START]===Load Application Properties===[START]");
 
-	String activeProfile = System.getProperty("app.env");
+	String activeProfile = System.getProperty("APP_ENV");
 	String propertiesFilename = "/application-" + activeProfile
 		+ ".properties";
 

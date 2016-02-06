@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -Dserver.port=$PORT -Dapp.env=prod -Ddatasource.url=$SPRING_DATASOURCE_URL -Ddatabase.username=$SPRING_DATASOURCE_USER -Ddatabase.password=$SPRING_DATASOURCE_PASSWORD -jar target/*.jar
+web: java $JAVA_OPTS -Dserver.port=$PORT -DAPP_ENV=prod -Ddatasource.url=$SPRING_DATASOURCE_URL -Ddatabase.username=$SPRING_DATASOURCE_USER -Ddatabase.password=$SPRING_DATASOURCE_PASSWORD -jar target/*.jar
