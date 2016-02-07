@@ -28,28 +28,27 @@ import com.open.license.repository.AppUserRepository;
 @RequestMapping("/")
 public class AppUserController {
 
-    private AppUserRepository repository;
+	private AppUserRepository repository;
 
-    @Autowired
-    public AppUserController(AppUserRepository repository) {
-	this.repository = repository;
-    }
-
-    @RequestMapping(method = RequestMethod.GET)
-    public String list(ModelMap model) {
-	List<AppUser> appUserList = repository.findAll();
-	model.addAttribute("appUserList", appUserList);
-	model.addAttribute("appUserNew", new AppUser());
-	return "appUser";
-    }
-
-    @RequestMapping(method = RequestMethod.POST)
-    public String insertData(ModelMap model,
-	    @ModelAttribute("appUserNew") @Valid AppUser record,
-	    BindingResult result) {
-	if (!result.hasErrors()) {
-	    repository.save(record);
+	@Autowired
+	public AppUserController(AppUserRepository repository) {
+		this.repository = repository;
 	}
-	return list(model);
-    }
+
+	@RequestMapping(method = RequestMethod.GET)
+	public String list(ModelMap model) {
+		List<AppUser> appUserList = repository.findAll();
+		model.addAttribute("appUserList", appUserList);
+		model.addAttribute("appUserNew", new AppUser());
+		return "appUser";
+	}
+
+	@RequestMapping(method = RequestMethod.POST)
+	public String insertData(ModelMap model, @ModelAttribute("appUserNew") @Valid AppUser record,
+			BindingResult result) {
+		if (!result.hasErrors()) {
+			repository.save(record);
+		}
+		return list(model);
+	}
 }

@@ -23,8 +23,8 @@ import com.open.license.config.ContextConfig;
 @Import({ ContextConfig.class })
 public class Application {
 
-    public static void main(String[] args) {
-	SpringApplication.run(Application.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
 
 }

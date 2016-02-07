@@ -8,6 +8,7 @@ import com.open.license.model.AppUser;
 /**
  * 
  * Distibution under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+ * 
  * @author malalanayake
  * @created Nov 8, 2015 7:47:13 PM
  * 

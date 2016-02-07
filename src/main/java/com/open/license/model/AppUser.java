@@ -19,28 +19,28 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Entity
 public class AppUser {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    @NotEmpty
-    private String userName;
-    @NotEmpty
-    private String passWord;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
+	@NotEmpty
+	private String userName;
+	@NotEmpty
+	private String passWord;
 
-    public String getUserName() {
-	return userName;
-    }
+	public String getUserName() {
+		return userName;
+	}
 
-    public void setUserName(String userName) {
-	this.userName = userName;
-    }
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 
-    public String getPassWord() {
-	return passWord;
-    }
+	public String getPassWord() {
+		return passWord;
+	}
 
-    public void setPassWord(String passWord) {
-	this.passWord = passWord;
-    }
+	public void setPassWord(String passWord) {
+		this.passWord = passWord;
+	}
 
 }

@@ -21,40 +21,38 @@ import org.springframework.core.io.ClassPathResource;
 @Configuration
 public class ContextConfig {
 
-    private Logger log = Logger.getLogger(getClass().getName());
+	private Logger log = Logger.getLogger(getClass().getName());
 
-    @Bean
-    public PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer() {
-	log.info("[START]===Load Application Properties===[START]");
+	@Bean
+	public PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer() {
+		log.info("[START]===Load Application Properties===[START]");
 
-	String activeProfile = System.getProperty("APP_ENV");
-	String propertiesFilename = "/application-" + activeProfile
-		+ ".properties";
+		String activeProfile = System.getProperty("APP_ENV");
+		String propertiesFilename = "/application-" + activeProfile + ".properties";
 
-	PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
-	configurer.setLocation(new ClassPathResource(propertiesFilename));
-	log.info("[ACTIVATE]===Activate Profile " + activeProfile
-		+ "===[ACTIVATE]");
-	log.info("[END]===Load Application Properties===[END]");
-	return configurer;
-    }
+		PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
+		configurer.setLocation(new ClassPathResource(propertiesFilename));
+		log.info("[ACTIVATE]===Activate Profile " + activeProfile + "===[ACTIVATE]");
+		log.info("[END]===Load Application Properties===[END]");
+		return configurer;
+	}
 
-    @Bean
-    public DataSource dataSource() {
-	log.info("[START]===Set DataSource===[START]");
+	@Bean
+	public DataSource dataSource() {
+		log.info("[START]===Set DataSource===[START]");
 
-	String username = System.getProperty("database.username");
-	String password = System.getProperty("database.password");
-	String url = System.getProperty("datasource.url");
+		String username = System.getProperty("database.username");
+		String password = System.getProperty("database.password");
+		String url = System.getProperty("datasource.url");
 
-	BasicDataSource basicDataSource = new BasicDataSource();
-	basicDataSource.setUrl(url);
-	basicDataSource.setUsername(username);
-	basicDataSource.setPassword(password);
+		BasicDataSource basicDataSource = new BasicDataSource();
+		basicDataSource.setUrl(url);
+		basicDataSource.setUsername(username);
+		basicDataSource.setPassword(password);
 
-	log.info("[END]===Set DataSource===[END]");
-	return basicDataSource;
+		log.info("[END]===Set DataSource===[END]");
+		return basicDataSource;
 
-    }
+	}
 
 }
