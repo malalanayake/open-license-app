@@ -187,7 +187,8 @@
 					</archive>
 				</configuration>
 			</plugin>
-
+			
+			<!-- Copy the SH files -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
