@@ -2,6 +2,7 @@ package com.open.license.config;
 
 import javax.sql.DataSource;
 
+import org.apache.activemq.broker.BrokerService;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Bean;
@@ -25,21 +26,23 @@ public class ContextConfig {
 
 	@Bean
 	public PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer() {
-		log.info("[START]===Load Application Properties===[START]");
+		log.info("[START:Load Application Properties]");
 
 		String activeProfile = System.getProperty("APP_ENV");
 		String propertiesFilename = "/application-" + activeProfile + ".properties";
 
 		PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
 		configurer.setLocation(new ClassPathResource(propertiesFilename));
-		log.info("[ACTIVATE]===Activate Profile " + activeProfile + "===[ACTIVATE]");
-		log.info("[END]===Load Application Properties===[END]");
+		log.info("[ACTIVATE:Profile " + activeProfile + "]");
+		log.info("[END:Load Application Properties]");
+
+		startActiveMqBroker();
 		return configurer;
 	}
 
 	@Bean
 	public DataSource dataSource() {
-		log.info("[START]===Set DataSource===[START]");
+		log.info("[START:Set DataSource]");
 
 		String username = System.getProperty("database.username");
 		String password = System.getProperty("database.password");
@@ -50,9 +53,20 @@ public class ContextConfig {
 		basicDataSource.setUsername(username);
 		basicDataSource.setPassword(password);
 
-		log.info("[END]===Set DataSource===[END]");
+		log.info("[END:Set DataSource]");
 		return basicDataSource;
 
+	}
+
+	private void startActiveMqBroker() {
+		log.info("[START:ActiveMQ Broker]");
+		BrokerService broker = new BrokerService();
+		try {
+			broker.addConnector("tcp://localhost:61616");
+			broker.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }
