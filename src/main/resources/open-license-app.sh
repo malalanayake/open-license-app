@@ -11,7 +11,7 @@ echo "SERVER PORT:${server_port}"
 
 datasource_url=""
 datasource_url=`cat ${FILE_NAME} | grep "datasource_url" | cut -d'=' -f2`
-echo "DB USER:${datasource_url}"
+echo "DB URL:${datasource_url}"
 
 database_username=""
 database_username=`cat ${FILE_NAME} | grep "database_username" | cut -d'=' -f2`

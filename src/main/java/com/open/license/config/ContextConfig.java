@@ -1,8 +1,18 @@
 package com.open.license.config;
 
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.sql.DataSource;
 
+import org.apache.activemq.Service;
+import org.apache.activemq.broker.BrokerPlugin;
 import org.apache.activemq.broker.BrokerService;
+import org.apache.activemq.broker.TransportConnector;
+import org.apache.activemq.security.AuthenticationUser;
+import org.apache.activemq.security.JaasAuthenticationPlugin;
+import org.apache.activemq.security.SimpleAuthenticationPlugin;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Bean;
@@ -61,7 +71,25 @@ public class ContextConfig {
 	private void startActiveMqBroker() {
 		log.info("[START:ActiveMQ Broker]");
 		BrokerService broker = new BrokerService();
+		TransportConnector tc = null;
+		TransportConnector tc2 = null;
 		try {
+
+			// tc2 = new TransportConnector();
+			// tc2.setUri(new URI("ws://localhost:1884"));
+			// tc2.setName("WSConn");
+			// broker.addConnector(tc2);
+
+			SimpleAuthenticationPlugin authentication = new SimpleAuthenticationPlugin();
+
+			List<AuthenticationUser> users = new ArrayList<AuthenticationUser>();
+			users.add(new AuthenticationUser("admin", "password", "admins,publishers,consumers"));
+			users.add(new AuthenticationUser("publisher", "password", "publishers,consumers"));
+			users.add(new AuthenticationUser("consumer", "password", "consumers"));
+			users.add(new AuthenticationUser("guest", "password", "guests"));
+			authentication.setUsers(users);
+			broker.setPlugins(new BrokerPlugin[] { authentication });
+			
 			broker.addConnector("tcp://localhost:61616");
 			broker.start();
 		} catch (Exception e) {
