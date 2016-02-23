@@ -5,21 +5,36 @@ APP_ENV=""
 APP_ENV=`cat ${FILE_NAME} | grep "APP_ENV" | cut -d'=' -f2`
 echo "APP ENV:${APP_ENV}"
 
-server_port=""
-server_port=`cat ${FILE_NAME} | grep "server_port" | cut -d'=' -f2`
-echo "SERVER PORT:${server_port}"
+SERVER_PORT=""
+SERVER_PORT=`cat ${FILE_NAME} | grep "SERVER_PORT" | cut -d'=' -f2`
+echo "SERVER PORT:${SERVER_PORT}"
 
-datasource_url=""
-datasource_url=`cat ${FILE_NAME} | grep "datasource_url" | cut -d'=' -f2`
-echo "DB URL:${datasource_url}"
+DATASOURCE_URL=""
+DATASOURCE_URL=`cat ${FILE_NAME} | grep "DATASOURCE_URL" | cut -d'=' -f2`
+echo "DB URL:${DATASOURCE_URL}"
 
-database_username=""
-database_username=`cat ${FILE_NAME} | grep "database_username" | cut -d'=' -f2`
-echo "DB USER:${database_username}"
+DATABASE_USERNAME=""
+DATABASE_USERNAME=`cat ${FILE_NAME} | grep "DATABASE_USERNAME" | cut -d'=' -f2`
+echo "DB USER:${DATABASE_USERNAME}"
 
-database_password=""
-database_password=`cat ${FILE_NAME} | grep "database_password" | cut -d'=' -f2`
-echo "DB PASS:${database_password}"
+DATABASE_PASSWORD=""
+DATABASE_PASSWORD=`cat ${FILE_NAME} | grep "DATABASE_PASSWORD" | cut -d'=' -f2`
+echo "DB PASS:${DATABASE_PASSWORD}"
 
+START_EMBEDDED_BROKER=""
+START_EMBEDDED_BROKER=`cat ${FILE_NAME} | grep "START_EMBEDDED_BROKER" | cut -d'=' -f2`
+echo "START EMBEDDED BROKER:${START_EMBEDDED_BROKER}"
 
-java -Dserver.port=${server_port} -DAPP_ENV=${APP_ENV} -Ddatabase.username=${database_username} -Ddatabase.password=${database_password} -Ddatasource.url=${datasource_url} -jar open-license-app-1.0.0-SNAPSHOT.jar
+ACTIVEMQ_HOST_NAME=""
+ACTIVEMQ_HOST_NAME=`cat ${FILE_NAME} | grep "ACTIVEMQ_HOST_NAME" | cut -d'=' -f2`
+echo "ACTIVEMQ HOST NAME:${ACTIVEMQ_HOST_NAME}"
+
+ACTIVEMQ_TCP_PORT=""
+ACTIVEMQ_TCP_PORT=`cat ${FILE_NAME} | grep "ACTIVEMQ_TCP_PORT" | cut -d'=' -f2`
+echo "ACTIVEMQ TCP PORT:${ACTIVEMQ_TCP_PORT}"
+
+ACTIVEMQ_STOMP_PORT=""
+ACTIVEMQ_STOMP_PORT=`cat ${FILE_NAME} | grep "ACTIVEMQ_STOMP_PORT" | cut -d'=' -f2`
+echo "ACTIVEMQ STOMP PORT:${ACTIVEMQ_STOMP_PORT}"
+
+java -Dserver.port=${SERVER_PORT} -DAPP_ENV=${APP_ENV} -DDATASOURCE_URL=${DATASOURCE_URL} -DDATABASE_USERNAME=${DATABASE_USERNAME} -DDATABASE_PASSWORD=${DATABASE_PASSWORD} -DSTART_EMBEDDED_BROKER=${START_EMBEDDED_BROKER} -DACTIVEMQ_HOST_NAME=${ACTIVEMQ_HOST_NAME} -DACTIVEMQ_TCP_PORT=${ACTIVEMQ_TCP_PORT} -DACTIVEMQ_STOMP_PORT=${ACTIVEMQ_STOMP_PORT} -jar open-license-app-1.0.0-SNAPSHOT.jar

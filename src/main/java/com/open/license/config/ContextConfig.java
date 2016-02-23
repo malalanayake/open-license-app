@@ -1,17 +1,13 @@
 package com.open.license.config;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.apache.activemq.Service;
 import org.apache.activemq.broker.BrokerPlugin;
 import org.apache.activemq.broker.BrokerService;
-import org.apache.activemq.broker.TransportConnector;
 import org.apache.activemq.security.AuthenticationUser;
-import org.apache.activemq.security.JaasAuthenticationPlugin;
 import org.apache.activemq.security.SimpleAuthenticationPlugin;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.log4j.Logger;
@@ -33,19 +29,40 @@ import org.springframework.core.io.ClassPathResource;
 public class ContextConfig {
 
 	private Logger log = Logger.getLogger(getClass().getName());
+	public final String APP_ENV;
+	public final String DATASOURCE_URL;
+	public final String DATABASE_USERNAME;
+	public final String DATABASE_PASSWORD;
+	public final boolean START_EMBEDDED_BROKER;
+	public final String ACTIVEMQ_HOST_NAME;
+	public final String ACTIVEMQ_TCP_PORT;
+	public final String ACTIVEMQ_STOMP_PORT;
+
+	public ContextConfig() {
+		APP_ENV = System.getProperty("APP_ENV");
+
+		DATASOURCE_URL = System.getProperty("DATASOURCE_URL");
+		DATABASE_USERNAME = System.getProperty("DATABASE_USERNAME");
+		DATABASE_PASSWORD = System.getProperty("DATABASE_PASSWORD");
+
+		START_EMBEDDED_BROKER = Boolean.valueOf(System.getProperty("START_EMBEDDED_BROKER"));
+		ACTIVEMQ_HOST_NAME = System.getProperty("ACTIVEMQ_HOST_NAME");
+		ACTIVEMQ_TCP_PORT = System.getProperty("ACTIVEMQ_TCP_PORT");
+		ACTIVEMQ_STOMP_PORT = System.getProperty("ACTIVEMQ_STOMP_PORT");
+	}
 
 	@Bean
 	public PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer() {
 		log.info("[START:Load Application Properties]");
 
-		String activeProfile = System.getProperty("APP_ENV");
-		String propertiesFilename = "/application-" + activeProfile + ".properties";
+		String propertiesFilename = "/application-" + APP_ENV + ".properties";
 
 		PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
 		configurer.setLocation(new ClassPathResource(propertiesFilename));
-		log.info("[ACTIVATE:Profile " + activeProfile + "]");
+		log.info("[ACTIVATE:Profile " + APP_ENV + "]");
 		log.info("[END:Load Application Properties]");
 
+		// Start ActiveMQ Broker if enabled
 		startActiveMqBroker();
 		return configurer;
 	}
@@ -53,47 +70,33 @@ public class ContextConfig {
 	@Bean
 	public DataSource dataSource() {
 		log.info("[START:Set DataSource]");
-
-		String username = System.getProperty("database.username");
-		String password = System.getProperty("database.password");
-		String url = System.getProperty("datasource.url");
-
 		BasicDataSource basicDataSource = new BasicDataSource();
-		basicDataSource.setUrl(url);
-		basicDataSource.setUsername(username);
-		basicDataSource.setPassword(password);
-
+		basicDataSource.setUrl(DATASOURCE_URL);
+		basicDataSource.setUsername(DATABASE_USERNAME);
+		basicDataSource.setPassword(DATABASE_PASSWORD);
 		log.info("[END:Set DataSource]");
 		return basicDataSource;
 
 	}
 
 	private void startActiveMqBroker() {
-		log.info("[START:ActiveMQ Broker]");
 		BrokerService broker = new BrokerService();
-		TransportConnector tc = null;
-		TransportConnector tc2 = null;
-		try {
+		if (START_EMBEDDED_BROKER) {
+			log.info("[START:ActiveMQ Broker]");
+			try {
+				SimpleAuthenticationPlugin authentication = new SimpleAuthenticationPlugin();
 
-			// tc2 = new TransportConnector();
-			// tc2.setUri(new URI("ws://localhost:1884"));
-			// tc2.setName("WSConn");
-			// broker.addConnector(tc2);
+				List<AuthenticationUser> users = new ArrayList<AuthenticationUser>();
+				users.add(new AuthenticationUser("admin", "admin", "admins,publishers,consumers"));
+				authentication.setUsers(users);
+				broker.setPlugins(new BrokerPlugin[] { authentication });
 
-			SimpleAuthenticationPlugin authentication = new SimpleAuthenticationPlugin();
-
-			List<AuthenticationUser> users = new ArrayList<AuthenticationUser>();
-			users.add(new AuthenticationUser("admin", "password", "admins,publishers,consumers"));
-			users.add(new AuthenticationUser("publisher", "password", "publishers,consumers"));
-			users.add(new AuthenticationUser("consumer", "password", "consumers"));
-			users.add(new AuthenticationUser("guest", "password", "guests"));
-			authentication.setUsers(users);
-			broker.setPlugins(new BrokerPlugin[] { authentication });
-			
-			broker.addConnector("tcp://localhost:61616");
-			broker.start();
-		} catch (Exception e) {
-			e.printStackTrace();
+				broker.addConnector("tcp://" + ACTIVEMQ_HOST_NAME + ":" + ACTIVEMQ_TCP_PORT);
+				broker.addConnector("stomp://" + ACTIVEMQ_HOST_NAME + ":" + ACTIVEMQ_STOMP_PORT);
+				broker.start();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
