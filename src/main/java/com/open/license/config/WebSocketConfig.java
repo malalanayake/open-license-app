@@ -24,14 +24,15 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 	@Autowired
 	ContextConfig contextConfig;
 
-	// Have to put the SPRING_BROKER_ENABLE property
-	boolean brokerEnabled = true;
+	//TODO: Have to put the ENABLE_SIMPLE_BROKER property
+	boolean enableSimpleBroker = true;
+	// Set the value of the "host" header to use in STOMP CONNECT frames
 	String brokerVirtualHost = "";
 
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
 		config.setApplicationDestinationPrefixes("/app");
-		if (brokerEnabled) {
+		if (enableSimpleBroker) {
 			StompBrokerRelayRegistration brokerRegistration = config.enableStompBrokerRelay("/queue", "/topic")
 					.setSystemLogin("admin").setSystemPasscode("admin").setClientLogin("admin")
 					.setClientPasscode("admin").setRelayHost(contextConfig.ACTIVEMQ_HOST_NAME)
