@@ -3,7 +3,7 @@ Go to Preference->Java->Code Style->Code Template
 Change the Type pattern as follows 
 
 /**
- * Distibution under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+ * Distribution under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
  * @author ${user}
  * @created ${date} ${time}
  * 
